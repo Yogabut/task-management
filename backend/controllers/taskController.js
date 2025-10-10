@@ -5,26 +5,27 @@ const Task = require('../models/Task');
 // @access  Private 
 const getTasks = async (req, res) => {
     try{
-        const {status} = req.query;
+        const {status, project} = req.query;
         let filter = {};
         if (status) {
             filter.status = status;
         }
+        if (project) {
+            filter.project = project;
+        }
 
         let tasks;
         if (req.user.role === "admin") {
-            tasks = await Task.find(filter).populate(
-                'assignedTo', 
-                'name email profileImageUrl'
-            );
+            tasks = await Task.find(filter)
+                .populate('assignedTo', 'name email profileImageUrl')
+                .populate('project', 'name status');
         } else {
             tasks = await Task.find({
                 ...filter,
                 assignedTo: req.user._id
-            }).populate(
-                'assignedTo', 
-                'name email profileImageUrl'
-            );
+            })
+                .populate('assignedTo', 'name email profileImageUrl')
+                .populate('project', 'name status');
         }
 
         // add completed todo checklist count to each task
@@ -107,12 +108,17 @@ const createTask = async (req, res) => {
         const{
             title,
             description,
+            project,
             priority,
             dueDate,
             assignedTo,
             attachments,
             todoChecklist,
         } = req.body;
+
+        if (!project) {
+            return res.status(400).json({ message: "Project is required" });
+        }
 
         if (!Array.isArray(assignedTo)) {
             return res
@@ -123,6 +129,7 @@ const createTask = async (req, res) => {
         const task = await Task.create({
             title,
             description,
+            project,
             priority,
             dueDate,
             assignedTo,
