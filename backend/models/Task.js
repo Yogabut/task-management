@@ -1,4 +1,3 @@
-const { text } = require('express');
 const mongoose = require('mongoose');
 
 const todoSchema = new mongoose.Schema(
@@ -16,7 +15,7 @@ const taskSchema = new mongoose.Schema(
         dueDate: {type: Date, required: true},
         assignedTo: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
         createdBy: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-        attachment: [{type: String}],
+        attachments: [{type: String}],
         todoChecklist: [todoSchema],
         progress: {type: Number, default: 0}
     },
