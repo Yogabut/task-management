@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bycript = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // generate JWT
@@ -26,8 +26,8 @@ const registerUser = async (req, res) => {
         }
 
         // hash password
-        const salt = await bycript.genSalt(10);
-        const hashedPassword = await bycript.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
         
         // create new user
         const user = await User.create({
@@ -65,8 +65,8 @@ const loginUser = async (req, res) => {
             return res.status(401).json({message: 'Invalid email or password'});
         }
         // compare password
-        const ismatch = await bycript.compare(password, user.password);
-        if (!ismatch){
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch){
             return res.status(401).json({message: 'Invalid email or password'});
         }
         // return user data with jwt
@@ -112,8 +112,8 @@ const updateUserProfile = async (req, res) => {
         user.email = req.body.email || user.email;
 
         if (req.body.password){
-            const salt = await bycript.genSalt(10);
-            user.password = await bycript.hash(req.body.password, salt);
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(req.body.password, salt);
         }
 
         const updatedUser = await user.save();
