@@ -22,6 +22,14 @@ const ProjectForm = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
 
   useEffect(() => {
     if (isEdit) {
