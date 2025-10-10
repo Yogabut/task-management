@@ -1,7 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 import { TASK_ENDPOINTS } from '../utils/apiPaths';
 
-// Get all tasks
+// Get all tasks  
 export const getAllTasks = async (filters = {}) => {
   try {
     const response = await axiosInstance.get(TASK_ENDPOINTS.GET_ALL, { params: filters });
