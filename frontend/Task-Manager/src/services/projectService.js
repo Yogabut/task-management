@@ -36,6 +36,7 @@ export const createProject = async (projectData) => {
 export const updateProject = async (id, projectData) => {
   try {
     const response = await axiosInstance.put(PROJECT_ENDPOINTS.UPDATE(id), projectData);
+    const response = await axiosInstance.put(PROJECT_ENDPOINTS.PUT(id), projectData);
     return response.data;
   } catch (error) {
     throw error.response?.data || error;
